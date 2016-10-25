@@ -1,0 +1,3 @@
+registers:10
+bus:4
+word:16
