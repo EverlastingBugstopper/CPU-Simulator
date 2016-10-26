@@ -1,15 +1,57 @@
 package simulator;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author avery
  */
-public class Register {
-    
+public class Register 
+{
+   private int size;
+   private String name;
+   private int number;
+   
+   public Register(String nam, int rS, int num)
+   {
+        name = nam;
+        size = rS;
+        number = num;
+        ClockCycle.increment();
+        System.out.println("Register " + number + ": " + ClockCycle.toStaticString());
+   }
+   
+   public int getSize()
+   {
+       return size;
+   }
+   
+   public void setSize(int s)
+   {
+       size = s;
+   }
+   
+   public String getName()
+   {
+       return name;
+   }
+   
+   public void setName(String n)
+   {
+       name = n;
+   }
+   
+   public int getNumber()
+   {
+       return number;
+   }
+   
+   //There is no setNumber because there should not be conflicting registers
+   
+   public String toString()
+   {
+       String s = "Register " + name + ":";
+       s += "\nNumber: " + number;
+       s += "\nSize: " + size;
+       
+       return s;
+   }
 }

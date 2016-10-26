@@ -12,7 +12,8 @@ package simulator;
  */
 public class Simulator {
     public static void main(String[] args) {
-            Configuration configuracion = new Configuration();
-            System.out.println(configuracion.toString());
+            Configuration CPUConfig = new Configuration();
+            RegisterContainer rC = new RegisterContainer(CPUConfig.getWordSize(), CPUConfig.getNumOfRegisters());
+            Bus partyBus = new Bus(CPUConfig.getBusSize());
     }
 }
