@@ -1,3 +1,11 @@
 registers:10
 bus:4
 word:16
+add:true
+and:true
+divide:true
+lessThan:true
+multiply:true
+or:true
+subtract:true
+xor:true

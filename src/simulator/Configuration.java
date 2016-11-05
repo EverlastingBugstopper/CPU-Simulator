@@ -1,21 +1,35 @@
 package simulator;
 
 import java.io.*;
-import java.util.*;
 
 /**
  *
  * @author avery
  */
-public class Configuration 
+public final class Configuration 
 {
     private int wordSize;
     private int busSize;
     private int numOfRegisters;
-    private String fileName = "config.txt";
+    private String fileName;
+    private boolean canAdd;
+    private boolean canAnd;
+    private boolean canDivide;
+    private boolean canLessThan;
+    private boolean canMultiply;
+    private boolean canOr;
+    private boolean canSubtract;
+    private boolean canXor;
     
     public Configuration()
     {
+        fileName = "config.txt";
+        read(fileName);
+    }
+    
+    public Configuration(String fN)
+    {
+        fileName = "fN";
         read(fileName);
     }
     
@@ -46,8 +60,75 @@ public class Configuration
                     case "numOfRegisters":
                         numOfRegisters = Integer.parseInt(info[1]);
                         break;
+                    case "add":
+                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
+                        {
+                            canAdd = true;
+                            break;
+                        }
+                        canAdd = false;
+                        break;
+                    case "and":
+                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
+                        {
+                            canAnd = true;
+                            break;
+                        }
+                        canAnd = false;
+                        break;
+                    case "divide":
+                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
+                        {
+                            canDivide = true;
+                            break;
+                        }
+                        canDivide = false;
+                        break;
+                    case "lessThan":
+                    case "lessthan":
+                    case "less":
+                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
+                        {
+                            canLessThan = true;
+                            break;
+                        }
+                        canLessThan = false;
+                        break;
+                    case "multiply":
+                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
+                        {
+                            canMultiply = true;
+                            break;
+                        }
+                        canLessThan = false;
+                        break;
+                    case "or":
+                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
+                        {
+                            canOr = true;
+                            break;
+                        }
+                        canOr = false;
+                        break;
+                    case "subtract":
+                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
+                        {
+                            canSubtract = true;
+                            break;
+                        }
+                        canSubtract = false;
+                        break;
+                    case "xor":
+                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
+                        {
+                            canXor = true;
+                            break;
+                        }
+                        canXor = false;
+                        break;
                     default:
                         System.out.println("\nUnusable data: " + info[0] + info[2] + "\n");
+                        break;
                 }
             }
             
@@ -60,16 +141,46 @@ public class Configuration
         }
     }
     
-    public int getWordSize()
+    public boolean canAdd()
     {
-        return wordSize;
+        return canAdd;
     }
     
-    public void setWordSize(int wS)
+    public boolean canAnd()
     {
-        wordSize = wS;
+        return canAnd;
     }
     
+    public boolean canDivide()
+    {
+        return canDivide;
+    }
+    
+    public boolean canLessThan()
+    {
+        return canLessThan;
+    }
+    
+    public boolean canMultiply()
+    {
+        return canMultiply;
+    }
+    
+    public boolean canOr()
+    {
+        return canOr;
+    }
+    
+    public boolean canSubtract()
+    {
+        return canSubtract;
+    }
+    
+    public boolean canXor()
+    {
+        return canXor;
+    }
+
     public int getBusSize()
     {
         return busSize;
@@ -78,6 +189,16 @@ public class Configuration
     public void setBusSize(int bS)
     {
         busSize = bS;
+    }
+    
+    public String getFileName()
+    {
+        return fileName;
+    }
+    
+    public void setFileName(String f)
+    {
+        fileName = f;
     }
     
     public int getNumOfRegisters()
@@ -90,14 +211,14 @@ public class Configuration
         numOfRegisters = nOR;
     }
     
-    public String getFileName()
+    public int getWordSize()
     {
-        return fileName;
+        return wordSize;
     }
     
-    public void setFileName(String f)
+    public void setWordSize(int wS)
     {
-        fileName = f;
+        wordSize = wS;
     }
     
     @Override

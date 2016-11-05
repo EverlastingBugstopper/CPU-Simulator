@@ -8,11 +8,11 @@ import java.util.*;
  */
 public class RegisterContainer 
 {
-    private ArrayList<Register> allRegisters;
+    private final ArrayList<Register> allRegisters;
     
-    public RegisterContainer(int wordSize ,int numOfRegisters)
+    public RegisterContainer(int wordSize, int numOfRegisters)
     {
-        allRegisters = new ArrayList<Register>(numOfRegisters);
+        allRegisters = new ArrayList<>(numOfRegisters);
         
         for (int i = 0; i < numOfRegisters; i++)
         {

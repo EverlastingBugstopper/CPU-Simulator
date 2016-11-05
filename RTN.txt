@@ -1,0 +1,16 @@
+fetch:
+    MA<-PC; C<-PC+2
+    MD<-MatMA
+    IR<-MD
+add:
+    A<-Rsrc
+    B<-Rdest
+    C<-A+B
+    Rdest<-C
+irmov:
+    Rdest<-src
+rrmov:
+    Rdest<-Rsrc
+jmp:
+    PC<-Rsrc
+    

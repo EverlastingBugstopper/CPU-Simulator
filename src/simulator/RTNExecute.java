@@ -1,69 +1,118 @@
 package simulator;
-
 import java.io.*;
 import java.util.*;
-
 /**
  *
  * @author avery
  */
-public class RTNExecute {
-
+public class RTNExecute
+{
     private final String fileName;
     ArrayList<ArrayList<String>> instructions;
 
-    public RTNExecute() {
+    public RTNExecute()
+    {
         fileName = "RTN.txt";
     }
 
-    public RTNExecute(String fN) {
+    public RTNExecute(String fN)
+    {
         fileName = fN;
     }
 
-    public boolean run(String chunk) {
+    public boolean run(String chunk)
+    {
         read(chunk);
         return execute();
     }
 
-    public boolean execute() {
-        try {
-            for (int currentLine = 0; currentLine < instructions.size(); currentLine++) {
-                for (int currentInstruction = 0; currentInstruction < instructions.get(currentLine).size(); currentInstruction++) {
+    public boolean execute()
+    {
+        try
+        {
+            for (int currentLine = 0; currentLine < instructions.size(); currentLine++)
+            {
+                for (int currentInstruction = 0; currentInstruction < instructions.get(currentLine).size(); currentInstruction++)
+                {
                     String current = instructions.get(currentLine).get(currentInstruction);
-                    String[] arrows = current.split("<-");
-                    System.out.println(arrows[0] + " " + arrows[1]);
+                    String [] arrows = current.split("<-");
+                    if (arrows.length < 2)
+                    {
+                        throw new Exception("This instruction does not contain a <-, or it isn't properly located.");
+                    }
+
+                    
+                    
+                    ArrayList<String> plusOps = null;
+                    ArrayList<String> subOps = null;
+                    
+                    for (String arrow : arrows) 
+                    {
+                        String[] plusOp = arrow.split("\\+");
+                        plusOps = new ArrayList<>(Arrays.asList(plusOp));
+                    }
+                    
+                    for (String arrow : arrows) 
+                    {
+                        String[] subOp = arrow.split("\\-");
+                        subOps = new ArrayList<>(Arrays.asList(subOp));
+                    }
+                    
+                    if (plusOps.size() >= 2)
+                    {
+                        System.out.println(plusOps.get(1) + " is added to " + plusOps.get(0) + "\n");
+                    }
+                    
+                    if (subOps.size() >= 2)
+                    {
+                        System.out.println(subOps.get(1) + " is subtracted from " + subOps.get(0) + "\n");
+                    }
+
+                    System.out.println(arrows[1] + " goes into " + arrows[0] + ".\n");
                 }
             }
 
             ClockCycle.increment(instructions.size());
             return true;
-        } catch (Exception e) {
+        }
+
+        catch(Exception e)
+        {
             e.printStackTrace();
         }
 
         return false;
     }
 
-    private ArrayList<ArrayList<String>> read(String chunk) {
+    private ArrayList<ArrayList<String>> read(String chunk)
+    {
         instructions = new ArrayList<>();
 
-        try {
+        try
+        {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             boolean begin = false;
             String line;
 
-            while ((line = reader.readLine()) != null) {
-                String[] info = line.split(":");
-                if (info[0].equals(chunk)) {
+            while ((line = reader.readLine()) != null)
+            {
+                String [] info = line.split(":");
+                if (info[0].equals(chunk))
+                {
                     begin = true; //hits the chunk we want
-                } else if (line.indexOf(':') != -1 && begin) {
+                }
+
+                else if (line.indexOf(':') != -1 && begin)
+                {
                     return instructions;
                 }
 
-                if (begin) {
-                    if (line.indexOf(':') == -1) {
-                        line = line.replaceAll("\\s", "");
-                        String[] instructionsArray = line.split(";");
+                if (begin)
+                {
+                    if (line.indexOf(':') == -1)
+                    {
+                        line = line.replaceAll("\\s","");
+                        String [] instructionsArray = line.split(";");
                         ArrayList<String> instructionsList = new ArrayList<>(Arrays.asList(instructionsArray));
 
                         this.instructions.add(instructionsList);
@@ -72,7 +121,10 @@ public class RTNExecute {
             }
 
             reader.close();
-        } catch (IOException e) {
+        }
+
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
 
@@ -80,7 +132,8 @@ public class RTNExecute {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return instructions.toString();
     }
 }

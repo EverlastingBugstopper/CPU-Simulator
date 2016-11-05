@@ -8,15 +8,15 @@ public class Register
 {
    private int size;
    private String name;
-   private int number;
+   private final int number;
+   private int save;
    
    public Register(String nam, int rS, int num)
    {
         name = nam;
         size = rS;
         number = num;
-        ClockCycle.increment();
-        System.out.println("Register " + number + ": " + ClockCycle.toStaticString());
+        save = 1;
    }
    
    public int getSize()
