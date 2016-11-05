@@ -13,6 +13,9 @@ public class ALU
     private final boolean canOr;
     private final boolean canSubtract;
     private final boolean canXor;
+    private int zeroFlag;
+    private int signFlag;
+    private int overflowFlag;
 
     public ALU(boolean add, boolean and, boolean divide,
                boolean less, boolean multiply, boolean or, 
@@ -26,22 +29,38 @@ public class ALU
         canOr       = or;
         canSubtract = subtract;
         canXor      = xor;
+        zeroFlag = 0;
+        signFlag = 0;
+        overflowFlag = 0;
     }
     
-    public int add(int a, int b) throws Exception
+    private int add(int a, int b) throws Exception
     {
+        int result;
+        
         if (canAdd)
         {
-            return (a + b);
+            try
+            {
+                result = Math.addExact(a, b);
+            }
+            
+            catch (ArithmeticException e)
+            {
+                result = a + b;
+                overflowFlag = 1;
+            }
         }
         
         else
         {
             throw new Exception("This ALU cannot perform an add operation.");
         }
+        
+        return result;
     }
     
-    public int and(int a, int b) throws Exception
+    private int and(int a, int b) throws Exception
     {
         if (canAnd)
         {
@@ -54,11 +73,19 @@ public class ALU
         }
     }
     
-    public int divide(int a, int b) throws Exception
+    private int divide(int a, int b) throws Exception
     {
         if (canDivide)
         {
-            return (a / b);
+            if (b != 0)
+            {
+                return (a / b);
+            }
+            
+            else
+            {
+                throw new Exception("You cannot divide by 0.");
+            }
         }
         
         else
@@ -67,7 +94,68 @@ public class ALU
         }
     }
     
-    public int lessThan(int a, int b) throws Exception
+    public int execute(int operation, int a, int b) throws Exception
+    {
+        int result;
+        switch(operation)
+        {
+            case 0:
+                result = add(a, b);
+                break;
+            case 1:
+                result = and(a, b);
+                break;
+            case 2:
+                result = divide(a, b);
+                break;
+            case 3:
+                result = lessThan(a, b);
+                break;
+            case 4:
+                result = multiply(a, b);
+                break;
+            case 5:
+                result = or(a, b);
+                break;
+            case 6:
+                result = subtract(a, b);
+                break;
+            case 7:
+                result = xor(a, b);
+                break;
+            default:
+                throw new Exception("The operation provided does not exist.");
+        }
+        
+        if (result == 0)
+        {
+            zeroFlag = 1;
+        }
+        
+        if (result < 0)
+        {
+            signFlag = 1;
+        }
+        
+        return result;
+    }
+    
+    public int getOverflowFlag()
+    {
+        return overflowFlag;
+    }
+    
+    public int getSignFlag()
+    {
+        return signFlag;
+    }
+    
+    public int getZeroFlag()
+    {
+        return zeroFlag;
+    }
+    
+    private int lessThan(int a, int b) throws Exception
     {
         if (canLessThan)
         {
@@ -84,24 +172,37 @@ public class ALU
         
         else
         {
-            throw new Exception("This ALU canno perform a less than operation.");
+            throw new Exception("This ALU cannot perform a less than operation.");
         }
     }
     
-    public int multiply(int a, int b) throws Exception
+    private int multiply(int a, int b) throws Exception
     {
+        int result;
+        
         if (canMultiply)
         {
-            return (a * b);
+            try
+            {
+                result = Math.multiplyExact(a, b);
+            }
+            
+            catch (ArithmeticException e)
+            {
+                result = a * b;
+                overflowFlag = 1;
+            }
         }
         
         else 
         {
             throw new Exception("This ALU cannot perform a multiplication operation.");
         }
+        
+        return result;
     }
     
-    public int or(int a, int b) throws Exception
+    private int or(int a, int b) throws Exception
     {
         if (canOr)
         {
@@ -114,20 +215,40 @@ public class ALU
         }
     }
     
-    public int subtract(int a, int b) throws Exception
+    public void resetFlags()
     {
+        zeroFlag = 0;
+        signFlag = 0;
+        overflowFlag = 0;
+    }
+    
+    private int subtract(int a, int b) throws Exception
+    {
+        int result;
+        
         if (canSubtract)
         {
-            return (a - b);
+            try
+            {
+                result = Math.subtractExact(a, b);
+            }
+            
+            catch (ArithmeticException e)
+            {
+                result = a - b;
+                overflowFlag = 1;
+            }
         }
         
         else
         {
             throw new Exception("This ALU cannot perform a subtraction operation.");
         }
+        
+        return result;
     }
     
-    public int xor(int a, int b) throws Exception
+    private int xor(int a, int b) throws Exception
     {
         if (canXor)
         {

@@ -1,40 +1,40 @@
 package simulator;
-
+import java.math.BigInteger;
 /**
  *
  * @author avery
  */
 public class BaseConversion 
 {
-    public static String intToBinary(int intValue)
+    public static String intToBinary(BigInteger intValue)
     {
-        return Integer.toBinaryString(intValue);
+        return intValue.toString(2);
     }
     
-    public static int binaryToInt(String binaryValue)
+    public static BigInteger binaryToInt(String binaryValue)
     {
-        return Integer.parseInt(binaryValue, 2);
+        return new BigInteger(binaryValue, 2);
     }
     
-    public static String intToHex(int intValue)
+    public static String intToHex(BigInteger intValue)
     {
-        return Integer.toHexString(intValue);
+        return intValue.toString(16);
     }
     
-    public static int hexToInt(String hexValue)
+    public static BigInteger hexToInt(String hexValue)
     {
-        return Integer.parseInt(hexValue, 8);
+        return new BigInteger(hexValue, 16);
     }
     
     public static String hexToBinary(String hexValue)
     {
-        int intVal = hexToInt(hexValue);
+        BigInteger intVal = hexToInt(hexValue);
         return intToBinary(intVal);
     }
     
     public static String binaryToHex(String binaryValue)
     {
-        int intVal = binaryToInt(binaryValue);
+        BigInteger intVal = binaryToInt(binaryValue);
         return intToHex(intVal);
     }
 }
