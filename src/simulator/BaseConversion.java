@@ -42,9 +42,12 @@ public class BaseConversion
     
     private static String stripHex(String hexValue)
     {
-        if ((hexValue.charAt(0) == '0') && ((hexValue.charAt(1) == 'x') || hexValue.charAt(1) == 'X'))
+        if (hexValue.length() >= 2)
         {
-            hexValue = hexValue.substring(2);
+            if ((hexValue.charAt(0) == '0') && ((hexValue.charAt(1) == 'x') || hexValue.charAt(1) == 'X'))
+            {
+                hexValue = hexValue.substring(2);
+            }
         }
         
         return hexValue;
@@ -52,6 +55,7 @@ public class BaseConversion
     
     public static String formatHex(String hexValue, int size) throws Exception
     {
+        hexValue = stripHex(hexValue);
         String value = "";
         while (value.length() + hexValue.length() < size)
         {

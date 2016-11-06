@@ -28,17 +28,31 @@ public class MainMemory
         
         for (int address = 0; address < (memorySize / 8); address++)
         {
-            String location = "0x";
             String index = BaseConversion.intToHex(new BigInteger((Integer.toString(address * 8))), numOfHexDigits);
-            
-            memory.put((location + index), BaseConversion.intToBinary(new BigInteger("0"), wordSize));
+            String value = BaseConversion.intToBinary(new BigInteger("0"), wordSize);
+            memory.put(index, value);
         }
     }
     
-    public void write(String address, String value) throws Exception
+    public boolean write(String address, String value)
     {
-        memory.put(BaseConversion.formatHex(address, numOfHexDigits), 
-                   BaseConversion.formatBinary(value, wordSize));
+        try 
+        {
+            memory.put(BaseConversion.formatHex(address, numOfHexDigits), 
+                       BaseConversion.formatBinary(value, wordSize));
+        }
+        
+        catch (Exception ex)
+        {
+            return false; //returns false if doesn't run successfully
+        }
+        
+        return true; //returns if successfully runs
+    }
+    
+    public String read(String address) throws Exception
+    {
+        return memory.get(BaseConversion.formatHex(address, numOfHexDigits));
     }
     
     /**
@@ -49,25 +63,17 @@ public class MainMemory
     public String toString()
     {
         String s = "";
-        
         for (int address = 0; address < (memorySize / 8); address++)
         {
-            String location = "0x";
-            String index = "";
-            try
-            {
-                index = BaseConversion.intToHex(new BigInteger((Integer.toString(address * 8))), numOfHexDigits);
+            String currentAddress = "";
+            try {
+                currentAddress = BaseConversion.intToHex(new BigInteger((Integer.toString(address * 8))), numOfHexDigits);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
-            for (int i = 0; i < (numOfHexDigits - index.length()); i++)
-            {
-                location += "0"; //pad memory location with zeroes
-            }
-            String currentAddress = location + index;
-            s += currentAddress + " -> " + memory.get(currentAddress) + "\n";
+            
+            String currentValue = memory.get(currentAddress);
+            s += currentAddress + " -> " + currentValue + "\n";
         }
         
         return s;
