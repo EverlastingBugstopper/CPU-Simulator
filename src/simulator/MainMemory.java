@@ -40,6 +40,10 @@ public class MainMemory
     
     public boolean writeByte(String address, String value)
     {
+        while (value.length() < byteSize)
+        {
+            value = "0" + value;
+        }
         try 
         {
             memory.put(gobbleItUp(address), BaseConversion.formatBinary(value, byteSize));
@@ -55,6 +59,10 @@ public class MainMemory
     
     public boolean writeWord(String address, String value)
     {
+        while (value.length() < wordSize)
+        {
+            value = "0" + value;
+        }
         try {
             int initial = BaseConversion.hexToInt(gobbleItUp(address)).intValue();
             for (int i = initial; i < (wordSize + initial); i += byteSize)
