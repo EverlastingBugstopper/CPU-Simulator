@@ -100,7 +100,7 @@ public class RTNExecute {
     public ArrayList<String> getPossibles() {
         return possibleInstructions;
     }
-    
+
     public int numOfPossibles() {
         return possibleInstructions.size();
     }

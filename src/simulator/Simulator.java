@@ -14,7 +14,7 @@ public class Simulator {
         Register iR = rC.getRegister("IR");
         iR.setValue("00010000000000000000000000000000"); //the 1 represents the add function in RTN
         Bus partyBus = new Bus(Configuration.getBusSize());
-        
+
         me.run(iR);
 
         MainMemory mem = new MainMemory(Configuration.getWordSize());
