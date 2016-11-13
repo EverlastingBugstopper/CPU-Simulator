@@ -13,22 +13,22 @@ import static org.junit.Assert.*;
  * @author avery
  */
 public class BaseConversionTest {
-    
+
     public BaseConversionTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -87,6 +87,7 @@ public class BaseConversionTest {
 
     /**
      * Test of hexToBinary method, of class BaseConversion.
+     *
      * @throws java.lang.Exception
      */
     @Test
@@ -101,6 +102,7 @@ public class BaseConversionTest {
 
     /**
      * Test of binaryToHex method, of class BaseConversion.
+     *
      * @throws java.lang.Exception
      */
     @Test
@@ -112,5 +114,5 @@ public class BaseConversionTest {
         assertEquals(expResult, result);
         System.out.println("The expected result was " + expResult + " and " + result + " was given.\n");
     }
-    
+
 }

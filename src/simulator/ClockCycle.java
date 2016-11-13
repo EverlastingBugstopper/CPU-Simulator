@@ -10,50 +10,43 @@ package simulator;
  * @author avery
  */
 public class ClockCycle {
+
     private static int value;
-    
+
     private static ClockCycle self = new ClockCycle();
-    
-    public ClockCycle()
-    {
+
+    public ClockCycle() {
         value = 0;
     }
-    
-    public ClockCycle(int v)
-    {
+
+    public ClockCycle(int v) {
         value = v;
     }
-    
-    public static ClockCycle increment()
-    {
+
+    public static ClockCycle increment() {
         value += 1;
         return self;
     }
-    
-    public static ClockCycle increment(int v)
-    {
+
+    public static ClockCycle increment(int v) {
         value += v;
         return self;
     }
 
-    public static ClockCycle get() 
-    {
+    public static ClockCycle get() {
         return self;
     }
-    
-    public static ClockCycle set(int v)
-    {
+
+    public static ClockCycle set(int v) {
         value = v;
         return self;
     }
-    
-    public static int getValue()
-    {
+
+    public static int getValue() {
         return value;
     }
-   
-    public static String toStaticString()
-    {
+
+    public static String toStaticString() {
         return Integer.toString(self.getValue());
     }
 }

@@ -6,8 +6,8 @@ import java.io.*;
  *
  * @author avery
  */
-public final class Configuration 
-{
+public final class Configuration {
+
     private int wordSize;
     private int busSize;
     private int numOfRegisters;
@@ -20,33 +20,26 @@ public final class Configuration
     private boolean canOr;
     private boolean canSubtract;
     private boolean canXor;
-    
-    public Configuration()
-    {
+
+    public Configuration() {
         fileName = "config.txt";
         read(fileName);
     }
-    
-    public Configuration(String fN)
-    {
+
+    public Configuration(String fN) {
         fileName = "fN";
         read(fileName);
     }
-    
-    public void read(String fN)
-    {
-        try
-        {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            
+
+    public void read(String fN) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+
             String line;
-            
-            while ((line = reader.readLine()) != null)
-            {
-                String [] info = line.split(":");
-                
-                switch (info[0])
-                {
+
+            while ((line = reader.readLine()) != null) {
+                String[] info = line.split(":");
+
+                switch (info[0]) {
                     case "word":
                     case "words":
                     case "wordSize":
@@ -61,24 +54,21 @@ public final class Configuration
                         numOfRegisters = Integer.parseInt(info[1]);
                         break;
                     case "add":
-                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
-                        {
+                        if (info[1].substring(0, 1).toLowerCase().equals("t")) {
                             canAdd = true;
                             break;
                         }
                         canAdd = false;
                         break;
                     case "and":
-                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
-                        {
+                        if (info[1].substring(0, 1).toLowerCase().equals("t")) {
                             canAnd = true;
                             break;
                         }
                         canAnd = false;
                         break;
                     case "divide":
-                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
-                        {
+                        if (info[1].substring(0, 1).toLowerCase().equals("t")) {
                             canDivide = true;
                             break;
                         }
@@ -87,40 +77,35 @@ public final class Configuration
                     case "lessThan":
                     case "lessthan":
                     case "less":
-                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
-                        {
+                        if (info[1].substring(0, 1).toLowerCase().equals("t")) {
                             canLessThan = true;
                             break;
                         }
                         canLessThan = false;
                         break;
                     case "multiply":
-                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
-                        {
+                        if (info[1].substring(0, 1).toLowerCase().equals("t")) {
                             canMultiply = true;
                             break;
                         }
                         canLessThan = false;
                         break;
                     case "or":
-                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
-                        {
+                        if (info[1].substring(0, 1).toLowerCase().equals("t")) {
                             canOr = true;
                             break;
                         }
                         canOr = false;
                         break;
                     case "subtract":
-                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
-                        {
+                        if (info[1].substring(0, 1).toLowerCase().equals("t")) {
                             canSubtract = true;
                             break;
                         }
                         canSubtract = false;
                         break;
                     case "xor":
-                        if (info[1].substring(0, 1).toLowerCase().equals("t"))
-                        {
+                        if (info[1].substring(0, 1).toLowerCase().equals("t")) {
                             canXor = true;
                             break;
                         }
@@ -131,99 +116,78 @@ public final class Configuration
                         break;
                 }
             }
-            
-            reader.close();
-        }
-        
-        catch (IOException e)
-        {
-            e.printStackTrace();
+
+        } catch (IOException e) {
+            System.out.println("The specified file could not be opened.");
         }
     }
-    
-    public boolean canAdd()
-    {
+
+    public boolean canAdd() {
         return canAdd;
     }
-    
-    public boolean canAnd()
-    {
+
+    public boolean canAnd() {
         return canAnd;
     }
-    
-    public boolean canDivide()
-    {
+
+    public boolean canDivide() {
         return canDivide;
     }
-    
-    public boolean canLessThan()
-    {
+
+    public boolean canLessThan() {
         return canLessThan;
     }
-    
-    public boolean canMultiply()
-    {
+
+    public boolean canMultiply() {
         return canMultiply;
     }
-    
-    public boolean canOr()
-    {
+
+    public boolean canOr() {
         return canOr;
     }
-    
-    public boolean canSubtract()
-    {
+
+    public boolean canSubtract() {
         return canSubtract;
     }
-    
-    public boolean canXor()
-    {
+
+    public boolean canXor() {
         return canXor;
     }
 
-    public int getBusSize()
-    {
+    public int getBusSize() {
         return busSize;
     }
-    
-    public void setBusSize(int bS)
-    {
+
+    public void setBusSize(int bS) {
         busSize = bS;
     }
-    
-    public String getFileName()
-    {
+
+    public String getFileName() {
         return fileName;
     }
-    
-    public void setFileName(String f)
-    {
+
+    public void setFileName(String f) {
         fileName = f;
     }
-    
-    public int getNumOfRegisters()
-    {
+
+    public int getNumOfRegisters() {
         return numOfRegisters;
     }
-    
-    public void setNumOfRegisters(int nOR)
-    {
+
+    public void setNumOfRegisters(int nOR) {
         numOfRegisters = nOR;
     }
-    
-    public int getWordSize()
-    {
+
+    public int getWordSize() {
         return wordSize;
     }
-    
-    public void setWordSize(int wS)
-    {
+
+    public void setWordSize(int wS) {
         wordSize = wS;
     }
-    
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         String s = "Number of registers: " + numOfRegisters;
         s += "\nWord Size: " + wordSize;
         s += "\nBus Size: " + busSize;

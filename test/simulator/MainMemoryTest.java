@@ -17,24 +17,25 @@ import static org.junit.Assert.*;
  * @author avery
  */
 public class MainMemoryTest {
+
     private MainMemory mem;
-    
+
     public MainMemoryTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() throws Exception {
         mem = new MainMemory(32);
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -85,7 +86,7 @@ public class MainMemoryTest {
         String value = "01100111";
         mem.writeByte(address, value);
         String result = mem.readByte(address);
-        assertEquals(value, result); 
+        assertEquals(value, result);
     }
 
     /**
@@ -98,6 +99,6 @@ public class MainMemoryTest {
         String value = "0110";
         mem.writeWord(address, value);
         String result = mem.readWord(address);
-        assertEquals("00000000000000000000000000000110", result);        
-    }    
+        assertEquals("00000000000000000000000000000110", result);
+    }
 }
