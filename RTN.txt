@@ -7,10 +7,34 @@ add:
     B<-Rdest
     C<-A+B
     Rdest<-C
+xor:
+    A<-Rsrc
+    B<-Rdest
+    C<-A^B
+    Rdest<-C
+sub:
+    A<-Rsrc
+    B<-Rdest
+    C<-A-B
+    Rdest<-C
+and:
+    A<-Rsrc
+    B<-Rdest
+    C<-A&B
+    Rdest<-C
 irmov:
     Rdest<-src
 rrmov:
     Rdest<-Rsrc
 jmp:
-    PC<-Rsrc
+    PC<-src
+push:
+    MA<-Rsp
+    MatMA<-Rsrc
+pop:
+    MA<-Rsp
+    Rsrc<-MatMA
+call:
+    MA<-Rsp
+    PC<-src
     
