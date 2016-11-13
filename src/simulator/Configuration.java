@@ -20,6 +20,8 @@ public final class Configuration {
     private boolean canOr;
     private boolean canSubtract;
     private boolean canXor;
+    private int opCodeBits;
+    private int registerBits;
 
     public Configuration() {
         fileName = "config.txt";
@@ -120,6 +122,29 @@ public final class Configuration {
         } catch (IOException e) {
             System.out.println("The specified file could not be opened.");
         }
+
+        int bitValue = 0;
+        int greatestValue = 0;
+        int bitNumber;
+
+        //numOfRegisters + 1 to account for the instruction register
+        for (bitNumber = 1; greatestValue < (numOfRegisters + 1); bitNumber++) {
+            System.out.println("BEFORE: \nbitNumber: " + bitNumber + "\ngreatestValue: " + greatestValue
+                    + "\nnumOfRegisters: " + numOfRegisters);
+            if (bitValue == 0) {
+                bitValue++;
+            } else {
+                bitValue *= 2;
+            }
+            greatestValue += bitValue;
+            System.out.println("AFTER: \nbitNumber: " + bitNumber + "\ngreatestValue: " + greatestValue
+                    + "\nnumOfRegisters: " + numOfRegisters);
+        }
+        registerBits = bitNumber - 1; //-1 because the for loop increments one more than it should
+
+        System.out.println("AFTERAFTER: \nbitNumber: " + bitNumber + "\ngreatestValue: " + greatestValue
+                + "\nnumOfRegisters: " + numOfRegisters);
+
     }
 
     public boolean canAdd() {
@@ -184,6 +209,10 @@ public final class Configuration {
 
     public void setWordSize(int wS) {
         wordSize = wS;
+    }
+
+    public int getOpCodeBits() {
+        return opCodeBits;
     }
 
     @Override
