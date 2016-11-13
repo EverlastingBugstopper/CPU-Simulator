@@ -1,5 +1,5 @@
-registers:10
-bus:4
+registers:20
+bus:32
 word:32
 add:true
 and:true

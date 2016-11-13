@@ -27,7 +27,8 @@ public class RTNExecute {
         read("fetch");
         execute();
 
-        String opCode = instructionRegister.getValue().substring(0, 5); //the first 5 bits in the instruction
+        String opCode = instructionRegister.getValue().substring(0, Configuration.getFunctionBits()); //the first 5 bits in the instruction
+        System.out.println(opCode);
         //register will hold the operation needed
         int decodeOpCode = BaseConversion.binaryToInt(opCode).intValue();
 
@@ -98,6 +99,10 @@ public class RTNExecute {
 
     public ArrayList<String> getPossibles() {
         return possibleInstructions;
+    }
+    
+    public int numOfPossibles() {
+        return possibleInstructions.size();
     }
 
     private ArrayList<ArrayList<String>> read(String chunk) {

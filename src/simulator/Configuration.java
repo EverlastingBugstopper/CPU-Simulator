@@ -8,32 +8,36 @@ import java.io.*;
  */
 public final class Configuration {
 
-    private int wordSize;
-    private int busSize;
-    private int numOfRegisters;
-    private String fileName;
-    private boolean canAdd;
-    private boolean canAnd;
-    private boolean canDivide;
-    private boolean canLessThan;
-    private boolean canMultiply;
-    private boolean canOr;
-    private boolean canSubtract;
-    private boolean canXor;
-    private int opCodeBits;
-    private int registerBits;
+    private static int wordSize;
+    private static int busSize;
+    private static int numOfRegisters;
+    private static String fileName;
+    private static boolean canAdd;
+    private static boolean canAnd;
+    private static boolean canDivide;
+    private static boolean canLessThan;
+    private static boolean canMultiply;
+    private static boolean canOr;
+    private static boolean canSubtract;
+    private static boolean canXor;
+    private static int opCodeBits;
+    private static int argumentBits;
+    private static int functionBits;
+    private static RTNExecute executioner;
 
-    public Configuration() {
+    public Configuration(RTNExecute exec) throws Exception {
         fileName = "config.txt";
+        executioner = exec;
         read(fileName);
     }
 
-    public Configuration(String fN) {
+    public Configuration(String fN, RTNExecute exec) throws Exception {
         fileName = "fN";
+        executioner = exec;
         read(fileName);
     }
 
-    public void read(String fN) {
+    public static void read(String fN) throws Exception {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
 
             String line;
@@ -121,97 +125,138 @@ public final class Configuration {
 
         } catch (IOException e) {
             System.out.println("The specified file could not be opened.");
+        } catch (Exception ex) {
+            System.out.println("Invalid Configuration values.");
         }
 
+        argumentBits = calcNeededBits(numOfRegisters + 1);
+        System.out.println("Num of registers: " + (numOfRegisters + 1) + "\nargBits: " + argumentBits);
+        functionBits = calcNeededBits(executioner.numOfPossibles());
+        System.out.println("Num of Possibles: " + executioner.numOfPossibles() + "\nfunctionBits: " + functionBits);
+        int isaLength = ((2 * argumentBits) + functionBits);
+        if (isaLength > wordSize) {
+            throw new Exception("This amount of registers and functions will not work with this word size.");
+        } else if (isaLength < wordSize) {
+            argumentBits = (wordSize - functionBits) / 2;
+        }
+
+        isaLength = ((2 * argumentBits) + functionBits);
+
+        if (isaLength < wordSize) { //this is needed when the function bit is computed to be odd
+            functionBits++;
+        }
+
+        if (isaLength != wordSize) {
+            throw new Exception("Something went wrong when assembling the ISA, you shouldn't be seeing this error message.");
+        }
+    }
+
+    public static int getFunctionBits() {
+        return functionBits;
+    }
+
+    public static int getArgumentBits() {
+        return argumentBits;
+    }
+
+    public static String ISAtoString() {
+        String s = "";
+
+        for (int i = 0; i < functionBits; i++) {
+            s += "f";
+        }
+        s += "|";
+        for (int i = 0; i < argumentBits; i++) {
+            s += "a";
+        }
+        s += "|";
+        for (int i = 0; i < argumentBits; i++) {
+            s += "b";
+        }
+        return s;
+    }
+
+    private static int calcNeededBits(int representatives) {
         int bitValue = 0;
         int greatestValue = 0;
         int bitNumber;
 
-        //numOfRegisters + 1 to account for the instruction register
-        for (bitNumber = 1; greatestValue < (numOfRegisters + 1); bitNumber++) {
-            System.out.println("BEFORE: \nbitNumber: " + bitNumber + "\ngreatestValue: " + greatestValue
-                    + "\nnumOfRegisters: " + numOfRegisters);
+        for (bitNumber = 1; greatestValue < (representatives); bitNumber++) {
             if (bitValue == 0) {
                 bitValue++;
             } else {
                 bitValue *= 2;
             }
             greatestValue += bitValue;
-            System.out.println("AFTER: \nbitNumber: " + bitNumber + "\ngreatestValue: " + greatestValue
-                    + "\nnumOfRegisters: " + numOfRegisters);
         }
-        registerBits = bitNumber - 1; //-1 because the for loop increments one more than it should
-
-        System.out.println("AFTERAFTER: \nbitNumber: " + bitNumber + "\ngreatestValue: " + greatestValue
-                + "\nnumOfRegisters: " + numOfRegisters);
-
+        return bitNumber - 1;
     }
 
-    public boolean canAdd() {
+    public static boolean canAdd() {
         return canAdd;
     }
 
-    public boolean canAnd() {
+    public static boolean canAnd() {
         return canAnd;
     }
 
-    public boolean canDivide() {
+    public static boolean canDivide() {
         return canDivide;
     }
 
-    public boolean canLessThan() {
+    public static boolean canLessThan() {
         return canLessThan;
     }
 
-    public boolean canMultiply() {
+    public static boolean canMultiply() {
         return canMultiply;
     }
 
-    public boolean canOr() {
+    public static boolean canOr() {
         return canOr;
     }
 
-    public boolean canSubtract() {
+    public static boolean canSubtract() {
         return canSubtract;
     }
 
-    public boolean canXor() {
+    public static boolean canXor() {
         return canXor;
     }
 
-    public int getBusSize() {
+    public static int getBusSize() {
         return busSize;
     }
 
-    public void setBusSize(int bS) {
+    public static void setBusSize(int bS) {
         busSize = bS;
     }
 
-    public String getFileName() {
+    public static String getFileName() {
         return fileName;
     }
 
-    public void setFileName(String f) {
+    public static void setFileName(String f) {
         fileName = f;
     }
 
-    public int getNumOfRegisters() {
+    public static int getNumOfRegisters() {
         return numOfRegisters;
     }
 
-    public void setNumOfRegisters(int nOR) {
+    public static void setNumOfRegisters(int nOR) {
         numOfRegisters = nOR;
     }
 
-    public int getWordSize() {
+    public static int getWordSize() {
         return wordSize;
     }
 
-    public void setWordSize(int wS) {
+    public static void setWordSize(int wS) {
         wordSize = wS;
     }
 
-    public int getOpCodeBits() {
+    public static int getOpCodeBits() {
         return opCodeBits;
     }
 
