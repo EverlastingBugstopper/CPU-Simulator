@@ -12,9 +12,12 @@ public class MainMemory {
     private final int wordSize;
     private final int memorySize;
     private HashMap<String, String> memory;
+    private Stack<String> stack;
     private final int numOfHexDigits;
     private final int byteSize;
     private final BigInteger gobble;
+    private String MD;
+    private String MA;
 
     public MainMemory(int wS) throws Exception {
         wordSize = wS;
@@ -22,17 +25,48 @@ public class MainMemory {
         numOfHexDigits = 8;
         byteSize = 8;
         gobble = new BigInteger(Integer.toString(byteSize));
+        MD = BaseConversion.formatBinary("0", wordSize);
+        MA = BaseConversion.formatBinary("0", wordSize);
         initialize();
     }
 
     private void initialize() throws Exception {
         memory = new HashMap<>();
+        stack = new Stack<>();
 
         for (int address = 0; address < (memorySize / byteSize); address++) {
             String index = BaseConversion.intToHex(new BigInteger((Integer.toString(address * byteSize))), numOfHexDigits);
             String value = BaseConversion.intToBinary(new BigInteger("0"), byteSize);
             memory.put(index, value);
         }
+    }
+    
+    public void push(String value) {
+        stack.push(value);
+    }
+    
+    public String pop() {
+        return stack.pop();
+    }
+    
+    public void setMA(String ma) {
+        MA = ma;
+    }
+    
+    public String getMA() {
+        return MA;
+    }
+    
+    public void setMD(String md) {
+        MD = md;
+    }
+    
+    public String getMD() {
+        return MD;
+    }
+    
+    public String getMatMA() throws Exception {
+        return readWord(MA);
     }
 
     public boolean writeByte(String address, String value) {
@@ -104,7 +138,7 @@ public class MainMemory {
     @Override
     public String toString() {
         String s = "";
-        for (int address = 0; address < (memorySize / 8); address++) {
+        for (int address = 0; address < (memorySize / byteSize); address++) {
             String currentAddress = "";
             try {
                 currentAddress = BaseConversion.intToHex(new BigInteger((Integer.toString(address * 8))), numOfHexDigits);
@@ -115,6 +149,8 @@ public class MainMemory {
             String currentValue = memory.get(currentAddress);
             s += currentAddress + " -> " + currentValue + "\n";
         }
+        
+        s += "\n" + stack.toString();
 
         return s;
     }
