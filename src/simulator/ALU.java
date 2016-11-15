@@ -14,10 +14,23 @@ public class ALU {
     private final boolean canOr;
     private final boolean canSubtract;
     private final boolean canXor;
+    private int a;
+    private int b;
+    private int c;
     private int zeroFlag;
     private int signFlag;
     private int overflowFlag;
-
+    
+    public ALU() {
+        canAdd = Configuration.canAdd();
+        canAnd = Configuration.canAnd();
+        canDivide = Configuration.canDivide();
+        canLessThan = Configuration.canLessThan();
+        canMultiply = Configuration.canMultiply();
+        canOr = Configuration.canOr();
+        canSubtract = Configuration.canSubtract();
+        canXor = Configuration.canXor();
+    }
     public ALU(boolean add, boolean and, boolean divide,
             boolean less, boolean multiply, boolean or,
             boolean subtract, boolean xor) {
@@ -71,32 +84,31 @@ public class ALU {
         }
     }
 
-    public int execute(String operationBits, int a, int b) throws Exception {
-        int operation = BaseConversion.binaryToInt(operationBits).intValue();
+    public int execute(char operation) throws Exception {
         int result;
         switch (operation) {
-            case 0:
+            case '+':
                 result = add(a, b);
                 break;
-            case 1:
+            case '&':
                 result = and(a, b);
                 break;
-            case 2:
+            case '/':
                 result = divide(a, b);
                 break;
-            case 3:
+            case '<':
                 result = lessThan(a, b);
                 break;
-            case 4:
+            case '*':
                 result = multiply(a, b);
                 break;
-            case 5:
+            case '|':
                 result = or(a, b);
                 break;
-            case 6:
+            case '-':
                 result = subtract(a, b);
                 break;
-            case 7:
+            case '^':
                 result = xor(a, b);
                 break;
             default:
@@ -110,8 +122,28 @@ public class ALU {
         if (result < 0) {
             signFlag = 1;
         }
-
+        c = result;
         return result;
+    }
+    
+    public int getA() {
+        return a;
+    }
+    
+    public int getB() {
+        return b;
+    }
+    
+    public int getC() {
+        return c;
+    }
+    
+    public void setA(int aa) {
+        a = aa;
+    }
+    
+    public void setB(int bb) {
+        b = bb;
     }
 
     public int getOverflowFlag() {

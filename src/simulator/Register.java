@@ -53,6 +53,10 @@ public class Register {
     public String getValue() {
         return value;
     }
+    
+    public int getIntValue() {
+        return BaseConversion.binaryToInt(value).intValue();
+    }
 
     //There is no setNumber because there should not be conflicting registers
     @Override

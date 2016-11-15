@@ -32,6 +32,10 @@ public class RegisterContainer {
         System.out.println("The register you're looking for was not found.");
         return null;
     }
+    
+    public Register getRegister(int number) {
+        return allRegisters.get(number);
+    }
 
     public int size() {
         return allRegisters.size();

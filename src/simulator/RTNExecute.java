@@ -10,8 +10,14 @@ import java.util.*;
 public class RTNExecute {
 
     private final String fileName;
-    ArrayList<ArrayList<String>> instructions;
-    ArrayList<String> possibleInstructions;
+    private ArrayList<ArrayList<String>> instructions;
+    private ArrayList<String> possibleInstructions;
+    private RegisterContainer registerContainer;
+    private Register instructionRegister;
+    private ALU alu;
+    private int arg1;
+    private int arg2;
+    private int operation;
 
     public RTNExecute() {
         fileName = "RTN.txt";
@@ -23,16 +29,25 @@ public class RTNExecute {
         readPossibles();
     }
 
-    public boolean run(Register instructionRegister) {
+    public boolean run(RegisterContainer rC, Register iR, ALU al) {
+        registerContainer = rC;
+        instructionRegister = iR;
+        alu = al;
         read("fetch");
         execute();
-
-        String opCode = instructionRegister.getValue().substring(0, Configuration.getFunctionBits()); //the first 5 bits in the instruction
-        System.out.println(opCode);
+        String irWord = instructionRegister.getValue();
+        int funcStop = Configuration.getFunctionBits();
+        int arg1Stop = funcStop + Configuration.getArg1Bits();
+        int arg2Stop = arg1Stop + Configuration.getArg2Bits();
+        String op = irWord.substring(0, funcStop); //the first n bits in the instruction
+        String rg1 = irWord.substring(funcStop, arg1Stop);
+        String rg2 = irWord.substring(arg1Stop, arg2Stop);
         //register will hold the operation needed
-        int decodeOpCode = BaseConversion.binaryToInt(opCode).intValue();
+        operation = BaseConversion.binaryToInt(op).intValue();
+        arg1 = BaseConversion.binaryToInt(rg1).intValue();
+        arg2 = BaseConversion.binaryToInt(rg2).intValue();
 
-        read(possibleInstructions.get(decodeOpCode));
+        read(possibleInstructions.get(operation));
 
         return execute();
     }
@@ -47,28 +62,55 @@ public class RTNExecute {
                         throw new Exception("This instruction does not contain a <-, or it isn't properly located.");
                     }
 
-                    ArrayList<String> plusOps = null;
-                    ArrayList<String> subOps = null;
-
-                    for (String arrow : arrows) {
-                        String[] plusOp = arrow.split("\\+");
-                        plusOps = new ArrayList<>(Arrays.asList(plusOp));
-                    }
-
-                    for (String arrow : arrows) {
-                        String[] subOp = arrow.split("\\-");
-                        subOps = new ArrayList<>(Arrays.asList(subOp));
-                    }
-
-                    if (plusOps != null && plusOps.size() >= 2) {
-                        System.out.println(plusOps.get(1) + " is added to " + plusOps.get(0) + "\n");
-                    }
-
-                    if (subOps != null && subOps.size() >= 2) {
-                        System.out.println(subOps.get(1) + " is subtracted from " + subOps.get(0) + "\n");
-                    }
-
+                    Register rSource = null;
+                    Register rDest = null;
                     System.out.println(arrows[1] + " goes into " + arrows[0] + ".\n");
+                    
+                    if (arrows[1].charAt(0) == 'R') {
+                        if (arrows[1].charAt(1) == 's') {
+                            rSource = registerContainer.getRegister(arg1);
+                        } else if (arrows[1].charAt(1) == 'd') {
+                            rSource = registerContainer.getRegister(arg2);
+                        }
+                    }
+                    if (arrows[0].charAt(0) == 'R') {
+                        System.out.println("0" + arrows[0]);
+                        if (arrows[0].charAt(1) == 's') {
+                            rDest = registerContainer.getRegister(arg1);
+                        } else if (arrows[0].charAt(1) == 'd') {
+                            rDest = registerContainer.getRegister(arg2);
+                        }
+                    }
+                    
+                    if (arrows[0].charAt(0) == 'A') {
+                        if (rSource != null) {
+                            alu.setA(rSource.getIntValue());
+                        } else if (rDest != null) {
+                            alu.setA(rDest.getIntValue());
+                        }
+                    }
+                    
+                    if (arrows[0].charAt(0) == 'B') {
+                        if (rSource != null) {
+                            alu.setB(rSource.getIntValue());
+                        } else if (rDest != null) {
+                            alu.setB(rDest.getIntValue());
+                        }
+                    }
+                    try {
+                        if (arrows[1].charAt(0) == 'A' && arrows[1].charAt(2) == 'B') {
+                            alu.execute(arrows[1].charAt(1));
+                        }
+                    } catch (Exception e) {} //nothing is actually wrong here... probably
+                    
+                    if (arrows[1].charAt(0) == 'C' && rDest != null) {
+                        rDest.setValue(alu.getC());
+                    }
+                    
+                    if (rSource != null && rDest != null) {
+                        rDest.setValue(rSource.getValue());
+                    }
+
                 }
             }
 
@@ -105,9 +147,8 @@ public class RTNExecute {
         return possibleInstructions.size();
     }
 
-    private ArrayList<ArrayList<String>> read(String chunk) {
+    private ArrayList<ArrayList<String>> read(String opName) {
         instructions = new ArrayList<>();
-
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             boolean begin = false;
@@ -115,8 +156,8 @@ public class RTNExecute {
 
             while ((line = reader.readLine()) != null) {
                 String[] info = line.split(":");
-                if (info[0].equals(chunk)) {
-                    begin = true; //hits the chunk we want
+                if (info[0].equals(opName)) {
+                    begin = true; //hits the opName we want
                 } else if (line.indexOf(':') != -1 && begin) {
                     return instructions;
                 }

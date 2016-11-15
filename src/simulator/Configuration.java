@@ -21,7 +21,8 @@ public final class Configuration {
     private static boolean canSubtract;
     private static boolean canXor;
     private static int opCodeBits;
-    private static int argumentBits;
+    private static int arg1Bits;
+    private static int arg2Bits;
     private static int functionBits;
     private static RTNExecute executioner;
 
@@ -35,6 +36,10 @@ public final class Configuration {
         fileName = "fN";
         executioner = exec;
         read(fileName);
+    }
+    
+    public static void setExecutioner(RTNExecute ex) {
+        executioner = ex;
     }
 
     public static void read(String fN) throws Exception {
@@ -129,22 +134,10 @@ public final class Configuration {
             System.out.println("Invalid Configuration values.");
         }
 
-        argumentBits = calcNeededBits(numOfRegisters + 1);
-        System.out.println("Num of registers: " + (numOfRegisters + 1) + "\nargBits: " + argumentBits);
+        arg2Bits = calcNeededBits(numOfRegisters + 1);
         functionBits = calcNeededBits(executioner.numOfPossibles());
-        System.out.println("Num of Possibles: " + executioner.numOfPossibles() + "\nfunctionBits: " + functionBits);
-        int isaLength = ((2 * argumentBits) + functionBits);
-        if (isaLength > wordSize) {
-            throw new Exception("This amount of registers and functions will not work with this word size.");
-        } else if (isaLength < wordSize) {
-            argumentBits = (wordSize - functionBits) / 2;
-        }
-
-        isaLength = ((2 * argumentBits) + functionBits);
-
-        if (isaLength < wordSize) { //this is needed when the function bit is computed to be odd
-            functionBits++;
-        }
+        arg1Bits = wordSize - arg2Bits - functionBits;
+        int isaLength = arg1Bits + arg2Bits + functionBits;
 
         if (isaLength != wordSize) {
             throw new Exception("Something went wrong when assembling the ISA, you shouldn't be seeing this error message.");
@@ -155,8 +148,12 @@ public final class Configuration {
         return functionBits;
     }
 
-    public static int getArgumentBits() {
-        return argumentBits;
+    public static int getArg1Bits() {
+        return arg1Bits;
+    }
+    
+    public static int getArg2Bits() {
+        return arg2Bits;
     }
 
     public static String ISAtoString() {
@@ -166,11 +163,11 @@ public final class Configuration {
             s += "f";
         }
         s += "|";
-        for (int i = 0; i < argumentBits; i++) {
+        for (int i = 0; i < arg1Bits; i++) {
             s += "a";
         }
         s += "|";
-        for (int i = 0; i < argumentBits; i++) {
+        for (int i = 0; i < arg2Bits; i++) {
             s += "b";
         }
         return s;
